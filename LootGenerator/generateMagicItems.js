@@ -1,15 +1,31 @@
-var readline = require('readline-sync');
-var typeThresholds = require('./itemTypes.json');
+import { capitalize, roll, getResultFromTable } from '../assets/generalUtils.js';
+import * as assets from '../assets/assets.js';
 
-var potencyEnum = {
+const rl = require('readline-sync');
+
+const {
+  itemTypeThresholds: typeThresholds,
+  armorThresholds,
+  potionThresholds,
+  ringThresholds,
+  rodThresholds,
+  scrollThresholds,
+  staffThresholds,
+  wandThresholds,
+  weaponThresholds,
+  wondrousThresholds
+} = assets;
+
+const potencyEnum = {
   Minor: 'minor',
   Medium: 'medium',
   Major: 'major'
 };
-Object.freeze(potencyEnum); 
+Object.freeze(potencyEnum);
 
-var typeEnum = {
+const typeEnum = {
   Armor: 'armor',
+  Shield: 'shield',
   Weapon: 'weapon',
   Potion: 'potion',
   Ring: 'ring',
@@ -32,70 +48,57 @@ function getItemType(potency) {
   }
 }
 
-// Utility
-function capitalize(str) {
-  return str.replace(/^\w/, function(firstChar) {
-    return firstChar.toUpperCase();
-  });
-}
-
-function roll(sides) {
-  var res = Math.floor(Math.random() * (sides) + 1);
-  return res;
-}
-
 // Go
-var repeat = false;
+let repeat = false;
+let items = [];
 
 do {
-  var rl = readline;
-  var potency;
-  var numItems;
-  var items = [];
+  let potency;
+  let numItems;
 
-  // Select Potency
+  /******************
+   * Select Potency *
+   ******************/
   do {
-    var potencyIn = rl.question('Minor (0), Medium (1), or Major (2)? ');
+    const potencyIn = rl.question('> Minor (0), Medium (1), or Major (2)? ');
 
     if (/^[Mm](?:inor|edium|ajor)$/.test(potencyIn)) {
       potency = potencyEnum[capitalize(potencyIn)]
     } else if (/^[012]$/.test(potencyIn)) {
       switch (parseInt(potencyIn)) {
-        case 0:
-          potency = potencyEnum.Minor;
-          break;
-        case 1:
-          potency = potencyEnum.Medium;
-          break;
-        case 2:
-          potency = potencyEnum.Major;
-          break;
+        case 0: potency = potencyEnum.Minor; break;
+        case 1: potency = potencyEnum.Medium; break;
+        case 2: potency = potencyEnum.Major; break;
       }
     }
   } while (!potency);
 
-  // How many items
+  /******************
+   * How many items *
+   ******************/
   do {
-    var numItemsIn = rl.question('How many items (d#)? ');
+    const numItemsIn = rl.question('> How many items (d#)? ');
 
-    var sidesRe = /^d?(\d+)$/;
+    let sidesRe = /^d?(\d+)$/;
     if (sidesRe.test(numItemsIn)) {
-      sides = sidesRe.exec(numItemsIn)[1];
-      numItems = roll(sides)
+      const sides = sidesRe.exec(numItemsIn)[1];
+      numItems = roll(sides, 0, true)
     }
   } while (numItems === undefined)
 
-  // What types of items
-  var itemTypes = [];
-  var count = 0;
-  while (count < numItems) {
-    var typeRoll = roll(100);
+  /***********************************
+   * Determine the type of each item *
+   ***********************************/
+  let itemTypes = [];
+  let itemCount = 0;
+  while (itemCount < numItems) {
+    const typeRoll = roll(100);
 
-    var typeKeys = Object.keys(typeThresholds);
-    var iType = 0
+    const typeKeys = Object.keys(typeThresholds);
+    let iType = 0
     while (iType < typeKeys.length) {
-      var type = typeKeys[iType]
-      var threshold = typeThresholds[type];
+      const type = typeKeys[iType]
+      const threshold = typeThresholds[type];
 
       if (threshold[potency] && typeRoll >= threshold[potency][0] && typeRoll <= threshold[potency][1]) {
         itemTypes.push(type);
@@ -106,9 +109,67 @@ do {
     }
 
 
-    ++count;
+    ++itemCount;
   }
 
-  // Item Details
+  items = items.concat(itemTypes);
+  console.log(items);
+
+  /**********************************
+   * Generate details for each item *
+   **********************************/
+  let itemDetails = [];
+  let detailCount = 0;
+  while (detailCount < numItems) {
+    const type = itemTypes[detailCount];
+    let details = {};
+    let reroll;
+    switch (type) {
+      case typeEnum.Armor:
+        do {
+          const res = getResultFromTable(roll(100, 0, true), potency, armorThresholds)
+          reroll = !!res.reroll
+          details = Object.assign(res, details);
+        } while (reroll);
+        details.type = typeEnum.Armor;
+        break;
+      case typeEnum.Weapon:
+
+        break;
+      case typeEnum.Potion:
+
+        break;
+      case typeEnum.Ring:
+
+        break;
+      case typeEnum.Rod:
+
+        break;
+      case typeEnum.Scroll:
+
+        break;
+      case typeEnum.Staff:
+
+        break;
+      case typeEnum.Wand:
+
+        break;
+      case typeEnum.Wondrous:
+
+        break;
+    }
+
+    
+
+    ++detailCount;
+  }
+
+  /***********
+   * Repeat? *
+   ***********/
+  const repeatIn = rl.question('> Generate more items [y/N]? ');
+  repeat = /^\s*[Yy]\s*$/.test(repeatIn);
 
 } while (repeat);
+
+console.log(`\n${items}`);
