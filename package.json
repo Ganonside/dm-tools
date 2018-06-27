@@ -1,0 +1,32 @@
+{
+  "name": "dm-tools",
+  "version": "0.0.1",
+  "description": "A collection of tools that might prove useful for DMs playing D&D 3.5e",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "./node_modules/.bin/rollup -c",
+    "watch": "./node_modules/.bin/rollup -c -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "D&D",
+    "3.5e"
+  ],
+  "author": "Jon Horner",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.7.0",
+    "ramda": "^0.25.0",
+    "rollup": "^0.61.2",
+    "rollup-plugin-babel": "^3.0.5",
+    "rollup-plugin-node-resolve": "^3.3.0"
+  },
+  "dependencies": {
+    "readline-sync": "^1.4.9"
+  }
+}
