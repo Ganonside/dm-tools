@@ -1,5 +1,5 @@
 export default {
-  "armor": {
+  "armor & shields": {
     "minor": [1, 4],
     "medium": [1, 10],
     "major": [1, 10]

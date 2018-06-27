@@ -4,7 +4,7 @@ import * as assets from '../assets/assets.js';
 const rl = require('readline-sync');
 
 const {
-  itemTypeThresholds: typeThresholds,
+  itemFamilyThresholds: typeThresholds,
   armorThresholds,
   potionThresholds,
   ringThresholds,
@@ -16,16 +16,15 @@ const {
   wondrousThresholds
 } = assets;
 
-const potencyEnum = {
+const ePotency = {
   Minor: 'minor',
   Medium: 'medium',
   Major: 'major'
 };
-Object.freeze(potencyEnum);
+Object.freeze(ePotency);
 
-const typeEnum = {
-  Armor: 'armor',
-  Shield: 'shield',
+const eFamily = {
+  Armor: 'armor & shields',
   Weapon: 'weapon',
   Potion: 'potion',
   Ring: 'ring',
@@ -35,16 +34,16 @@ const typeEnum = {
   Wand: 'wand',
   Wondrous: 'wondrous'
 };
-Object.freeze(typeEnum);
+Object.freeze(eFamily);
 
 // What kind of item?
 function getItemType(potency) {
   var type;
 
   switch (potency) {
-    case potencyEnum.Minor:
-    case potencyEnum.Medium:
-    case potencyEnum.Major:
+    case ePotency.Minor:
+    case ePotency.Medium:
+    case ePotency.Major:
   }
 }
 
@@ -63,12 +62,12 @@ do {
     const potencyIn = rl.question('> Minor (0), Medium (1), or Major (2)? ');
 
     if (/^[Mm](?:inor|edium|ajor)$/.test(potencyIn)) {
-      potency = potencyEnum[capitalize(potencyIn)]
+      potency = ePotency[capitalize(potencyIn)]
     } else if (/^[012]$/.test(potencyIn)) {
       switch (parseInt(potencyIn)) {
-        case 0: potency = potencyEnum.Minor; break;
-        case 1: potency = potencyEnum.Medium; break;
-        case 2: potency = potencyEnum.Major; break;
+        case 0: potency = ePotency.Minor; break;
+        case 1: potency = ePotency.Medium; break;
+        case 2: potency = ePotency.Major; break;
       }
     }
   } while (!potency);
@@ -125,41 +124,41 @@ do {
     let details = {};
     let reroll;
     switch (type) {
-      case typeEnum.Armor:
+      case eFamily.Armor:
         do {
           const res = getResultFromTable(roll(100, 0, true), potency, armorThresholds)
           reroll = !!res.reroll
           details = Object.assign(res, details);
         } while (reroll);
-        details.type = typeEnum.Armor;
+        details.type = eFamily.Armor;
         break;
-      case typeEnum.Weapon:
+      case eFamily.Weapon:
 
         break;
-      case typeEnum.Potion:
+      case eFamily.Potion:
 
         break;
-      case typeEnum.Ring:
+      case eFamily.Ring:
 
         break;
-      case typeEnum.Rod:
+      case eFamily.Rod:
 
         break;
-      case typeEnum.Scroll:
+      case eFamily.Scroll:
 
         break;
-      case typeEnum.Staff:
+      case eFamily.Staff:
 
         break;
-      case typeEnum.Wand:
+      case eFamily.Wand:
 
         break;
-      case typeEnum.Wondrous:
+      case eFamily.Wondrous:
 
         break;
     }
 
-    
+
 
     ++detailCount;
   }

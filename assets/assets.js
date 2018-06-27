@@ -1,5 +1,5 @@
 import armorThresholds from './armorThresholds.js';
-import itemTypeThresholds from './itemTypeThresholds.js';
+import itemFamilyThresholds from './itemFamilyThresholds.js';
 import potionThresholds from './potionThresholds.js';
 import ringThresholds from './ringThresholds.js';
 import rodThresholds from './rodThresholds.js';
@@ -11,7 +11,7 @@ import wondrousThresholds from './wondrousThresholds.js';
 
 export {
   armorThresholds,
-  itemTypeThresholds,
+  itemFamilyThresholds,
   potionThresholds,
   ringThresholds,
   rodThresholds,
